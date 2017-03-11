@@ -8,15 +8,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    TextView myTextView;
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TextView myTextView;
-
-        final int i = 0;
         myTextView = (TextView)findViewById(R.id.textView1);
         Button b = (Button) findViewById(R.id.button);
         b.setOnClickListener(new View.OnClickListener() {
@@ -27,10 +26,17 @@ public class MainActivity extends AppCompatActivity {
                     str = "myandroid";
                     i++;
                 }
+                else{
+                    str = "what the fuck!";
+                    i++;
+                }
                 Toast.makeText(MainActivity.this,"someQuestion",Toast.LENGTH_LONG).show();
                 myTextView.setText(str);
 
             }
         });
     }
+
+
+
 }
