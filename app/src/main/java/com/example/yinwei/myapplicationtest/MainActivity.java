@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,12 +28,30 @@ public class MainActivity extends AppCompatActivity {
     //i用来计数，点击函数会用他来改变textview的值
     Bitmap bitmap;
     ImageView imageView;
+    Button showOS_BT;
     float bigger_X = (float) 1.5;
     float bigger_Y = (float) 1.5;
     float smaller_X =(float) 0.9;
     float smaller_Y = (float) 0.9;
     float rotate_R = 10;
     float rotate_L = -10;
+    final int MENU1 = 0x11;
+    final int MENU2 = 0x12;
+    final int MENU3 = 0x13;
+    final int MENU4 = 0x14;
+    final int MENU5 = 0x15;
+    final int MENU1_1 = 0x21;
+    final int MENU1_2 = 0x22;
+    final int MENU2_1 = 0x23;
+    final int MENU2_2 = 0x31;
+    final int MENU3_1 = 0x32;
+    final int MENU3_2 = 0x41;
+    final int MENU4_1 = 0x42;
+    final int MENU4_2 = 0x43;
+    final int MENU4_3 = 0x44;
+    final int MENU4_3_1 = 0x45;
+    final int MENU4_3_2 = 0x46;
+    final int MENU4_3_2_1 = 0x47;
     //ContextMenu contextMenu;
 
     //public void rigester(){
@@ -40,12 +61,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //copyright@yinwei
         //控件的获取，方式：findViewById
         final EditText phoneNumber = (EditText) findViewById(R.id.ET_PhoneNumber);
         final EditText passWord = (EditText) findViewById(R.id.ET_PassWord);
         myTextView = (TextView) findViewById(R.id.textView1);
         Button b = (Button) findViewById(R.id.button);
-
+        showOS_BT = (Button)findViewById(R.id.button6);
         textView4TestContextMenu = (TextView)findViewById(R.id.textView2);
         //registerForContextMenu(textView4TestContextMenu);
 
@@ -59,20 +81,47 @@ public class MainActivity extends AppCompatActivity {
                 //textView4TestContextMenu.setText("what's the F!");
                 menu.setHeaderIcon(R.drawable.image_1);
                 menu.setHeaderTitle("FirstMenu");
-                menu.add(1,0,0,"M1_1");
-                menu.add(1,1,1,"M1_2");
-                menu.add(1,2,2,"M1_3");
-                //上下文菜单之二级菜单/多级菜单的理解
-                SubMenu subMenu1 = menu.addSubMenu(0,3,3,"点我!!");
+//                menu.add(1,MENU1_1,0,"M1_1_standard");
+                SubMenu launchMode_SM = menu.addSubMenu(0,MENU1,0,"M1_LaunchMode");
+                launchMode_SM.add(1,MENU1_1,0,"Standard");
+                launchMode_SM.add(1,MENU1_2,1,"SingleTop");
+                menu.add(1,MENU2,1,"M2_OpenBrower");
+                menu.add(1,MENU3,2,"M3_ImageButton");
+
+                SubMenu subMenu1 = menu.addSubMenu(1,MENU4,3,"M4_GotoSecondMenu!!");
                 subMenu1.setHeaderIcon(R.drawable.image_1);
-                subMenu1.add(0,0,0,"M2_1");
-                subMenu1.add(0,1,1,"M2_2");
+                subMenu1.add(2,MENU4_1,0,"M4_1");
+                subMenu1.add(2,MENU4_2,1,"M4_2");
 
-                SubMenu subMenu2 = subMenu1.addSubMenu(0,2,2,"点我!!");
-                subMenu2.add(0,0,0,"M3_1");
+                SubMenu subMenu2 = subMenu1.addSubMenu(2,MENU4_3,2,"M4_3_GotoThirdMenu!!");
+                subMenu2.add(3,MENU4_3_1,0,"M4_3_1");
 
-                SubMenu subMenu3 = subMenu2.addSubMenu("点我!!");
-                subMenu3.add(0,0,0,"逗你玩!!");
+                SubMenu subMenu3 = subMenu2.addSubMenu(3,MENU4_3_2,1,"M4_3_2_GotoFourthMenu!!");
+                subMenu3.add(3,MENU4_3_2_1,0,"M4_3_2_1_!O(∩_∩)O!");
+
+                menu.add(1,MENU5,4,"RatingBar");
+
+//                上下文菜单之二级菜单/多级菜单的理解
+  /*       在学习上下文菜单ContextMenu的时候遇到了很多问题
+   *             First:利用一个TextView来测试contextMenu的时候，按照书上的内容，
+   *             在OnCreate()函数中为TextView对象注册上下文菜单，然后再函数外重写OnCreateContextMenu()函数，
+   *             可是当我长按这个注册了上下文菜单的TextView时，系统并没有自动调用OnCreateContextMenu()函数，
+   *             就连里面的测试代码(改变textView的text内容代码)都没触发，可见他并没有执行此函数，
+   *             之后我就想了解一下RegisterForContextMenu()是怎么给控件注册上下文菜单的，当我点进去之后发现，
+   *             这个注册函数就是给本控件添加了一个上下文菜单时间监听器OnCreateContextMenuListener()，
+   *             然后我就仿照为控件添加点击事件监听一样的方法来添加上下文菜单创建的监听器，结果监听事件触发了，
+   *             成功弹出了上下文菜单，但是任然不知道为什么用注册函数RegisterForContextMenu()不好使??????
+   *             Second:不理解多级菜单的含义，不知道哪个菜单算二级菜单三级菜单，
+   *             之后再观察代码的过程中，我发现：有一个最初的ContextMenu对象，是系统传进来的，应该属本Activity所有
+   *             用这个传进来的对象可以创建上下文菜单，但是用add()函数，创建的菜单不能再继续往里面点即不能进入下一级
+   *             菜单，而用addSubMenu()创建的菜单是进入了新的选择菜单，用他创建的菜单返回的是一个SubMenu对象，而SubMenu类
+   *             是Menu的子类，也是一个菜单，通过这个方法，就可以创建子菜单，也就是我们所说的多级菜单，最初弹出的是一级菜单
+   *             在此基础上创建的子菜单点击弹出的就是二级菜单，以此类推，就实现了多级菜单的功能，上下文菜单ContextMenu对象
+   *             能调用的添加菜单函数只有两个，即add()|addSubMenu(),
+   *                     add()添加的是普通菜单，实现其点击函数来完成功能，
+   *             addSunMenu()添加的是子菜单，也就是多级菜单，实现多层功能的选择*/
+
+
             }
 /*在学习上下文菜单ContextMenu的时候遇到了很多问题
   First:利用一个TextView来测试contextMenu的时候，按照书上的内容，
@@ -83,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
   这个注册函数就是给本控件添加了一个上下文菜单时间监听器OnCreateContextMenuListener()，
   然后我就仿照为控件添加点击事件监听一样的方法来添加上下文菜单创建的监听器，结果监听事件触发了，
   成功弹出了上下文菜单，但是任然不知道为什么用注册函数RegisterForContextMenu()不好使??????
+  Becouse I did't make the right method name!!!!
   Second:不理解多级菜单的含义，不知道哪个菜单算二级菜单三级菜单，
   之后再观察代码的过程中，我发现：有一个最初的ContextMenu对象，是系统传进来的，应该属本Activity所有
   用这个传进来的对象可以创建上下文菜单，但是用add()函数，创建的菜单不能再继续往里面点即不能进入下一级
@@ -95,6 +145,15 @@ public class MainActivity extends AppCompatActivity {
 
 
   */
+        });
+
+        showOS_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent2SelectOS = new Intent();
+                myIntent2SelectOS.setClass(MainActivity.this,SelecteOSActivity.class);
+                MainActivity.this.startActivity(myIntent2SelectOS);
+            }
         });
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,11 +172,22 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        phoneNumber.setText("TableLayout");
         phoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this,WindowsOSActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+        passWord.setText("Habit");
+        passWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,HabbiteActivity.class);
                 MainActivity.this.startActivity(intent);
             }
         });
@@ -218,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private int zoomoutImageView(float width,float height){
         //把传的参数拿进来放入新的变量
@@ -330,39 +401,84 @@ public class MainActivity extends AppCompatActivity {
         return 0;
     }
 
-    public void OnCreateContextMenu(ContextMenu contextMenu, View view, ContextMenuInfo contextMenuInfo){
-        //super.onCreateContextMenu(contextMenu,view,contextMenuInfo);
-        textView4TestContextMenu.setText("chcked1");
-        if(view == textView4TestContextMenu){
-            textView4TestContextMenu.setText("chcked");
-//            contextMenu.setHeaderIcon(R.drawable.image_1);
-//            contextMenu.setHeaderTitle("FirstMenu");
-//            contextMenu.add(1,0,0,"M1");
-//            contextMenu.add(1,1,1,"M2");
-//            contextMenu.add(1,2,2,"M3");
 
-//            SubMenu subMenu2 = contextMenu.addSubMenu("Menu2");
-//            subMenu2.setHeaderIcon(R.drawable.image_1);
-//            subMenu2.setHeaderTitle("SecondMenu");
-//            subMenu2.add(1,0,0,"M2_1");
-//            subMenu2.add(1,1,1,"M2_2");
-//            subMenu2.add(1,2,2,"M2_3");
-//            subMenu2.setGroupCheckable(1,true,true);
-//
-//            SubMenu subMenu3 = subMenu2.addSubMenu("Menu3");
-//            subMenu3.setHeaderIcon(R.drawable.image_1);
-//            subMenu3.setHeaderTitle("SecondMenu");
-//            subMenu3.add(1,0,0,"M3_1");
-//            subMenu3.add(1,1,1,"M3_2");
-//            subMenu3.add(1,2,2,"M3_3");
-//            subMenu3.setGroupCheckable(1,true,true);
+    public boolean onContextItemSelected(MenuItem item){
+        //note:you must make the method name right over here!!!!
+        //there is a Override method be used so that the system konw the right name only,
+        //and it can't find your method anyway
+//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+//        String id = String.valueOf(info.id);
 
-
+        switch (item.getItemId())
+        {
+            case MENU1_1:
+                Toast.makeText(this,"1MenuIsClicked",Toast.LENGTH_SHORT).show();
+                Intent Intent4Standard = new Intent();
+                Intent4Standard.setClass(MainActivity.this,LaunchModeStandardActivity.class);
+                startActivity(Intent4Standard);
+                break;
+            case MENU1_2:
+                Toast.makeText(this,"2MenuIsClicked",Toast.LENGTH_SHORT).show();
+                Intent Intent4SingleTop = new Intent();
+                Intent4SingleTop.setClass(MainActivity.this,LaunchModeSingleTopActivity.class);
+                startActivity(Intent4SingleTop);
+                break;
+            case MENU2:
+                Toast.makeText(this,"3MenuIsClicked",Toast.LENGTH_SHORT).show();
+                Uri uri = Uri.parse("http://www.baidu.com");
+                Intent intent4Brower = new Intent(Intent.ACTION_VIEW,uri);
+                startActivity(intent4Brower);
+                break;
+            case MENU3:
+                Toast.makeText(this,"4MenuIsClicked",Toast.LENGTH_SHORT).show();
+                Intent Intent4ImageButton = new Intent();
+                Intent4ImageButton.setClass(MainActivity.this,ImageButtonActivity.class);
+                startActivity(Intent4ImageButton);
+                break;
+            case MENU5:
+                Toast.makeText(this,"5MenuIsClicked",Toast.LENGTH_SHORT).show();
+                Intent Intent4RatingBar = new Intent();
+                Intent4RatingBar.setClass(MainActivity.this,RatingBarActivity.class);
+                startActivity(Intent4RatingBar);
+                break;
+            default:
+                return super.onContextItemSelected(item);
         }
-
-
+        return true;
     }
-
+//    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenuInfo contextMenuInfo){
+//        //super.onCreateContextMenu(contextMenu,view,contextMenuInfo);
+//        textView4TestContextMenu.setText("chcked1");
+//        if(view == textView4TestContextMenu){
+//            textView4TestContextMenu.setText("chcked");
+////            contextMenu.setHeaderIcon(R.drawable.image_1);
+////            contextMenu.setHeaderTitle("FirstMenu");
+////            contextMenu.add(1,0,0,"M1");
+////            contextMenu.add(1,1,1,"M2");
+////            contextMenu.add(1,2,2,"M3");
+//
+////            SubMenu subMenu2 = contextMenu.addSubMenu("Menu2");
+////            subMenu2.setHeaderIcon(R.drawable.image_1);
+////            subMenu2.setHeaderTitle("SecondMenu");
+////            subMenu2.add(1,0,0,"M2_1");
+////            subMenu2.add(1,1,1,"M2_2");
+////            subMenu2.add(1,2,2,"M2_3");
+////            subMenu2.setGroupCheckable(1,true,true);
+////
+////            SubMenu subMenu3 = subMenu2.addSubMenu("Menu3");
+////            subMenu3.setHeaderIcon(R.drawable.image_1);
+////            subMenu3.setHeaderTitle("SecondMenu");
+////            subMenu3.add(1,0,0,"M3_1");
+////            subMenu3.add(1,1,1,"M3_2");
+////            subMenu3.add(1,2,2,"M3_3");
+////            subMenu3.setGroupCheckable(1,true,true);
+//
+//
+//        }
+//
+//
+//    }
+//
 }
 
 
