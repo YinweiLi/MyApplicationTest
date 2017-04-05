@@ -42,14 +42,15 @@ public class SelecteOSActivity extends AppCompatActivity {
                 if (RB3.isChecked()){
                     myBundle.putString("SRB",(String)RB3.getText());
                 }
-//                else {
-//                    myBundle.putString("selected_RadioButton","nothing!");
-//
-//                }
+                else {
+                    myBundle.putString("selected_RadioButton","nothing!");
+
+                }
                 myShowOSIntent.putExtras(myBundle);
 
                 SelecteOSActivity.this.startActivity(myShowOSIntent);
                 //SelecteOSActivity.this.finish();
+                //finish this activity
             }
         });
     }

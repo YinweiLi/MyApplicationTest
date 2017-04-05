@@ -1,5 +1,7 @@
 package com.example.yinwei.myapplicationtest;
 
+import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
@@ -20,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     TextView myTextView;
@@ -42,21 +47,19 @@ public class MainActivity extends AppCompatActivity {
     final int MENU5 = 0x15;
     final int MENU1_1 = 0x21;
     final int MENU1_2 = 0x22;
-    final int MENU2_1 = 0x23;
-    final int MENU2_2 = 0x31;
-    final int MENU3_1 = 0x32;
-    final int MENU3_2 = 0x41;
     final int MENU4_1 = 0x42;
     final int MENU4_2 = 0x43;
     final int MENU4_3 = 0x44;
     final int MENU4_3_1 = 0x45;
     final int MENU4_3_2 = 0x46;
     final int MENU4_3_2_1 = 0x47;
-    //ContextMenu contextMenu;
 
     //public void rigester(){
       //  this.registerForContextMenu(myTextView);
     //}
+    //note:
+    //the method registerForContextMenu() is not wrrong!
+    //the most important is the name of method whitch need be overrided
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 zoomoutImageView(1,1);
             }
         });
+
         //给button添加点击事件
         setBigger.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -448,37 +452,56 @@ public class MainActivity extends AppCompatActivity {
     }
 //    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenuInfo contextMenuInfo){
 //        //super.onCreateContextMenu(contextMenu,view,contextMenuInfo);
-//        textView4TestContextMenu.setText("chcked1");
-//        if(view == textView4TestContextMenu){
-//            textView4TestContextMenu.setText("chcked");
-////            contextMenu.setHeaderIcon(R.drawable.image_1);
-////            contextMenu.setHeaderTitle("FirstMenu");
-////            contextMenu.add(1,0,0,"M1");
-////            contextMenu.add(1,1,1,"M2");
-////            contextMenu.add(1,2,2,"M3");
-//
-////            SubMenu subMenu2 = contextMenu.addSubMenu("Menu2");
-////            subMenu2.setHeaderIcon(R.drawable.image_1);
-////            subMenu2.setHeaderTitle("SecondMenu");
-////            subMenu2.add(1,0,0,"M2_1");
-////            subMenu2.add(1,1,1,"M2_2");
-////            subMenu2.add(1,2,2,"M2_3");
-////            subMenu2.setGroupCheckable(1,true,true);
-////
-////            SubMenu subMenu3 = subMenu2.addSubMenu("Menu3");
-////            subMenu3.setHeaderIcon(R.drawable.image_1);
-////            subMenu3.setHeaderTitle("SecondMenu");
-////            subMenu3.add(1,0,0,"M3_1");
-////            subMenu3.add(1,1,1,"M3_2");
-////            subMenu3.add(1,2,2,"M3_3");
-////            subMenu3.setGroupCheckable(1,true,true);
-//
-//
-//        }
-//
-//
 //    }
-//
+
+    public boolean onCreateOptionsMenu(Menu optionsmenu){
+        MenuItem item_service = optionsmenu.add(Menu.NONE,Menu.FIRST+1,0,"Service");
+        item_service.setIcon(R.drawable.yunlong);
+        optionsmenu.add(Menu.NONE,Menu.FIRST+2,1,"Message");
+        optionsmenu.add(Menu.NONE,Menu.FIRST+3,2,"Help");
+        optionsmenu.add(Menu.NONE,Menu.FIRST+4,3,"Weather");
+        return true;
+    }
+    public boolean onOptionsItemSelected(MenuItem menuItem){
+        switch(menuItem.getItemId()){
+            case Menu.FIRST+1:
+                Toast.makeText(this,menuItem.getTitle(),Toast.LENGTH_SHORT).show();
+                Intent intent4ServiceTest = new Intent();
+                intent4ServiceTest.setClass(MainActivity.this,ServiceTestActivity.class);
+                startActivity(intent4ServiceTest);
+
+                break;
+            case Menu.FIRST+2:
+                Toast.makeText(this,menuItem.getTitle(),Toast.LENGTH_SHORT).show();
+
+                String location = "geo:38.899533,-77.036476";
+                Uri uri4View = Uri.parse(location);
+                Intent myintent4View = new Intent(Intent.ACTION_VIEW,uri4View);
+                startActivity(myintent4View);
+                break;
+            case Menu.FIRST+3:
+                Toast.makeText(this,menuItem.getTitle(),Toast.LENGTH_SHORT).show();
+                String phoneNumber = "tel:15776842260";
+                Uri uri4Call = Uri.parse(phoneNumber);
+                Intent myintent4Call = new Intent(Intent.ACTION_DIAL,uri4Call);
+                startActivity(myintent4Call);
+                break;
+            case Menu.FIRST+4:
+                Intent myintent4WeatherNotice = new Intent(MainActivity.this,WeatherNoticeActivity.class);
+                startActivity(myintent4WeatherNotice);
+                break;
+            default:
+                Toast.makeText(this,"Nothing",Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+
+        return true;
+
+    }
+
+
+
 }
 
 

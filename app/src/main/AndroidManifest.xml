@@ -24,7 +24,29 @@
             android:name=".LaunchModeSingleTopActivity"
             android:launchMode="singleTop" />
         <activity android:name=".ImageButtonActivity" />
-        <activity android:name=".RatingBarActivity"></activity>
+        <activity android:name=".RatingBarActivity" />
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.yinwei.myapplicationtest.MyService" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".ServiceTestActivity" />
+        <activity android:name=".WeatherNoticeActivity" />
+
+        <receiver android:name=".NewAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
