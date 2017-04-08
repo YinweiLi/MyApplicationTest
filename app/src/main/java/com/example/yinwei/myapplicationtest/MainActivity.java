@@ -460,6 +460,7 @@ public class MainActivity extends AppCompatActivity {
         optionsmenu.add(Menu.NONE,Menu.FIRST+2,1,"Message");
         optionsmenu.add(Menu.NONE,Menu.FIRST+3,2,"Help");
         optionsmenu.add(Menu.NONE,Menu.FIRST+4,3,"Weather");
+        optionsmenu.add(Menu.NONE,Menu.FIRST+5,4,"HTTPTest");
         return true;
     }
     public boolean onOptionsItemSelected(MenuItem menuItem){
@@ -490,6 +491,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent myintent4WeatherNotice = new Intent(MainActivity.this,WeatherNoticeActivity.class);
                 startActivity(myintent4WeatherNotice);
                 break;
+            case Menu.FIRST+5:
+                Intent myintent4HTTPTest = new Intent(MainActivity.this,HttpTestActivity.class);
+                startActivity(myintent4HTTPTest);
             default:
                 Toast.makeText(this,"Nothing",Toast.LENGTH_SHORT).show();
                 break;

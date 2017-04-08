@@ -47,6 +47,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/new_app_widget_info" />
         </receiver>
+
+        <activity android:name=".HttpTestActivity"></activity>
     </application>
 
 </manifest>
